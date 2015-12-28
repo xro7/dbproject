@@ -1,0 +1,42 @@
+body {
+	margin:0;
+}
+#menu {
+	background-color: #0066ff;
+	height: 100px;
+}
+
+#topmenu{
+
+	height: 50%;
+
+}
+
+#botmenu{
+	height: 50%;
+
+}
+
+h1{
+	line-height: 50px;
+	text-align: center;
+	color: white;
+}
+
+#list{
+	list-style: none;
+	text-indent: 0px;
+	text-align: right;
+
+}
+
+li{
+	display:inline;
+	margin-left: 10px;
+	margin-right:5px;
+}
+
+a { 
+	color: white;
+	text-decoration: none;
+}

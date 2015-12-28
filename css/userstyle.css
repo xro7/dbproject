@@ -1,0 +1,14 @@
+body {
+	margin:0;
+}
+#topmenu {
+	background-color: #0066ff;
+	height: 100px;
+	text-align: center;
+	line-height: 100px;
+	color:white;
+}
+#main{
+	margin:  0px;
+	padding :0px;
+}

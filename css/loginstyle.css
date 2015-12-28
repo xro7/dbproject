@@ -1,0 +1,22 @@
+body{
+	margin:0px;
+}
+#space{
+	height: 200px;
+}
+#top {
+	background-color: #0066ff;
+	height: 100px;
+	line-height: 100px;
+	text-align:center;
+	color: white;
+}
+
+#form{
+
+	background-color: gray;
+	margin: auto 600px;
+}
+form{
+	text-align: center;
+}
