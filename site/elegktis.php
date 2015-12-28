@@ -24,7 +24,7 @@
 			echo 'Could not connect to database';
 			exit;
 		}
-		$query = "select * from eisigitis where username='$username' and password = '$password'";
+		$query = "select * from elegktis where username='$username' and password = '$password'";
 		$result = $db->query($query);
 		if (!$result) {
 		    printf("Error: %s\n", mysqli_error($db));
@@ -36,9 +36,9 @@
 		if ($numresults==1){
 			
 			$row = $result->fetch_assoc();
-			$_SESSION['valid_user_name'] = $row['name'];
-			$_SESSION['valid_user_username'] = $row['username'];
-			$_SESSION['valid_user_id'] = $row['id'];
+			$_SESSION['valid_user_name2'] = $row['name'];
+			$_SESSION['valid_user_username2'] = $row['username'];
+			$_SESSION['valid_user_id2'] = $row['id'];
 
 		}else {
 
@@ -47,12 +47,12 @@
 		}
 	}
 
-	if(isset($_SESSION['valid_user_name'])){
+	if(isset($_SESSION['valid_user_name2'])){
 
 	?>
 
 	<head>
-		<title><?php echo $_SESSION['valid_user_username'];  ?></title>
+		<title><?php echo $_SESSION['valid_user_username2'];  ?></title>
 		<link rel="stylesheet" href="../css/userstyle.css">
 
 	</head>
@@ -64,51 +64,9 @@
 				<h1>Πληροφοριακό Σύστημα Εξετάσεων</h1>
 			</div>
 
-			<div id="input">
-				<?php echo '<h1>Εισηγητής '.$_SESSION['valid_user_name'].'</h1>';?>
-				<a href="logout.php"> logout </a>
-				<hr>
-				<h3>Προσθήκη νέας ερώτησης</h3>
 
-				<form action="addquestion.php" method="post">
-					
-				<textarea name="question" id="question" cols="30" rows="10"></textarea>
-				<p>Επιλογές</p>
-				<input type="checkbox" name="correct1" value="correct1" >
-				<input type="text" id="choice1" name="choice1">
-				<input type="checkbox" name="correct2" value="correct2" >
-				<input type="text" id="choice2" name="choice2">
-				<input type="checkbox" name="correct3" value="correct3" >
-				<input type="text" id="choice3" name="choice3">
-				<input type="checkbox" name="correct4" value="correct4" >
-				<input type="text" id="choice4" name="choice4">
-			
-				<br>
-				<p>Απεθύνεται στις τάξεις:</p>
-
-				<label><input type="checkbox" name="a" value="a" >a </label>
-				<label><input type="checkbox" name="b" value="b" >b </label>
-				<label><input type="checkbox" name="g" value="g" >g</label>
-				<label><input type="checkbox" name="d" value="d" >d </label>
-				<label><input type="checkbox" name="e" value="e" >e </label>
-				<label><input type="checkbox" name="st" value="st" >st </label>
-				<br>
-
-				<p>Δυσκολία</p>
-
-				<select name="duskolia">
-					  <option value="easy">easy</option>
-					  <option value="medium">medium</option>
-					  <option value="hard">hard</option>
-					
-				</select>
-				<br>
-				<br>
-				<input type="submit" value="Προσθήκη">
-			
-				</form>
-
-		
+			<?php echo '<h1>Εισηγητής '.$_SESSION['valid_user_name2'].'</h1>';?>
+			<a href="logout.php"> logout </a>
 			
 
 			</div>
@@ -116,7 +74,7 @@
 			<div id="main">
 
 				
-				<h2>Ερωτήσεις</h2>
+				<h2>Ερωτήσεις που αναμένουν έγκριση</h2>
 				<?php
 
 					$db = new mysqli('localhost','xro','123','dbproject');
@@ -125,7 +83,7 @@
 						exit;
 					}
 
-					$query = "select * from erwtisi where approved=1";
+					$query = "select * from erwtisi where approved=0";
 					$result = $db->query($query);
 					if (!$result) {
 					    printf("Error: %s\n", mysqli_error($db));
@@ -135,8 +93,11 @@
 					$numresults = mysqli_num_rows($result);
 					for($i=0;$i< $numresults;$i++){
 						$row = $result->fetch_assoc();
-						echo '<h3> Eρώτηση: '.($i+1).' '. $row['text'].', Δυσκολία: '.$row['dyskolia'].'</h3>';
 						$id = $row['id'];
+						echo "<form action=\"approve.php\" method=\"post\">";
+
+						echo '<h3> Eρώτηση: '.($i+1).' '. $row['text'].', Δυσκολία: '.$row['dyskolia'].'</h3>';
+						
 						$q = 'select  choices from epiloges  where id IN (select cid from exei where qid='.$id.')';
 						$result2 = $db->query($q);
 						if (!$result2) {
@@ -184,7 +145,9 @@
 							echo '<li> '.$row['name'].'</li>';
 							echo '</ul>';
 						}
-
+						echo "<label><input type=\"checkbox\" name=\"approve\" value=\"$id\" >Έγκριση</label>";
+						echo "<label><input type=\"checkbox\" name=\"disapprove\" value=\"$id\" >Απόρριψη </label>";
+						echo "<input type=\"submit\" value=\"Υποβολή\"></form>";
 					}
 /*mysqli_insert_id() to get the id */
 /*select * from social.user U where U.id IN (select F.id2 from social.user U,social.friend F where U.id=122 and U.id=F.id1 );*/

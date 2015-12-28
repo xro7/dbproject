@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION['valid_user_name'])){
-	if (isset($_POST['question']) && isset($_POST['duskolia'])){
+	if (isset($_POST['question']) && ($_POST['question']!='') && isset($_POST['duskolia'])){
 		$q = $_POST['question'];
 		$d = $_POST['duskolia'];
 		/*echo $_POST['question'].' '.$_POST['duskolia'];*/
@@ -92,9 +92,13 @@ if (isset($_SESSION['valid_user_name'])){
 			addtodb($id,7);
 		}
 
-		echo "h eisagwgh egine me epituxia";
+		echo "Η εισαγωγή έγινε με επιτυχία";
+		echo "<a href=\"eisigitis.php\">goback</a>";
 
 
+	}else{
+		echo "Παρακαλώ εισάγετε όλα τα πεδία και προσπαθήστε ξανά";
+		echo "<a href=\"eisigitis.php\">goback</a>";
 	}
 }
 

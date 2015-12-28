@@ -1,6 +1,14 @@
+<?php
+session_start();
+if(isset($_SESSION['valid_user_name2'])){
+	header('Location: http://localhost/dbproject/site/elegktis.php');
+}else{
+
+	?>
+
 <html>
 	<head>
-		<title>Login Εισηγητή</title>
+		<title>Login Ελεγκτή</title>
 		<link rel="stylesheet" href="../css/loginstyle.css">
 		
 	</head>
@@ -8,14 +16,14 @@
 	<body>
 
 	<div id="top">
-		<h1>login Εισηγητή</h1>
+		<h1>login Ελεγκτή</h1>
 	</div>
 	
 
 	<div id="space"></div>
 	<div id="form">
 		
-		<form action="eisigitis.php" method="post">
+		<form action="elegktis.php" method="post">
 		  <label for="username">Username</label>
 		  <input type="text" name="username" placeholder="Username">
 		  <br>
@@ -29,3 +37,5 @@
 
 	</body>
 </html>
+
+<?php } ?>
