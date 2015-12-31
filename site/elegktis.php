@@ -5,6 +5,7 @@
 	<?php
 
 	session_start();
+	header('Content-Type: text/html; charset=utf-8');
 	if(isset($_POST['username']) && isset($_POST['password'])){
 		$username = $_POST['username'];
 		$password = $_POST['password'];
@@ -13,13 +14,15 @@
 			exit;
 		}
 
-		if(!get_magic_quotes_gpc()){
+/*		if(!get_magic_quotes_gpc()){
 			$username = addslashes($username);
 			$password = addslashes($password);
 
-		}
+		}*/
 
 		$db = new mysqli('localhost','xro','123','dbproject');
+		mysql_query("SET NAMES 'utf8'");
+		mysql_query("SET CHARACTER SET 'utf8'");
 		if (mysqli_connect_errno()){
 			echo 'Could not connect to database';
 			exit;
@@ -54,6 +57,7 @@
 	<head>
 		<title><?php echo $_SESSION['valid_user_username2'];  ?></title>
 		<link rel="stylesheet" href="../css/userstyle.css">
+		<meta charset="UTF-8">
 
 	</head>
 	<body>
@@ -65,7 +69,7 @@
 			</div>
 
 
-			<?php echo '<h1>Εισηγητής '.$_SESSION['valid_user_name2'].'</h1>';?>
+			<?php echo '<h1>Ελεγκτης '.$_SESSION['valid_user_name2'].'</h1>';?>
 			<a href="logout.php"> logout </a>
 			
 
@@ -98,7 +102,7 @@
 
 						echo '<h3> Eρώτηση: '.($i+1).' '. $row['text'].', Δυσκολία: '.$row['dyskolia'].'</h3>';
 						
-						$q = 'select  choices from epiloges  where id IN (select cid from exei where qid='.$id.')';
+						$q = 'select  choices from epiloges  where qid='.$id;
 						$result2 = $db->query($q);
 						if (!$result2) {
 					    	printf("Error: %s\n", mysqli_error($db));
@@ -114,7 +118,7 @@
 							echo '</ul>';
 						}
 
-						$q = 'select  choices from epiloges  where correct=1 and id IN (select cid from exei where qid='.$id.')';
+						$q = 'select  choices from epiloges  where correct=1 and qid='.$id;
 						$result3 = $db->query($q);
 						if (!$result3) {
 					    	printf("Error: %s\n", mysqli_error($db));

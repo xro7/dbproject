@@ -1,7 +1,10 @@
 <?php
 session_start();
+header('Content-Type: text/html; charset=utf-8');
 if (isset($_SESSION['valid_user_name2'])){
 	$db = new mysqli('localhost','xro','123','dbproject');
+	mysql_query("SET NAMES 'utf8'");
+	mysql_query("SET CHARACTER SET 'utf8'");
 	if (mysqli_connect_errno()){
 		echo 'Could not connect to database';
 		exit;
@@ -22,7 +25,7 @@ if (isset($_SESSION['valid_user_name2'])){
 	}elseif (isset($_POST['disapprove'])){
 		//echo $_POST['disapprove'];
 		$id = $_POST['disapprove'];
-		$query = "select cid from exei where qid=$id";
+/*		$query = "select cid from exei where qid=$id";
 		$result = $db->query($query);
 		
 		if (!$result) {
@@ -42,7 +45,7 @@ if (isset($_SESSION['valid_user_name2'])){
 		  	  printf("Error: %s\n", mysqli_error($db));
 		  	  exit();
 			}
-		}
+		}*/
 
 
 

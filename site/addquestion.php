@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 session_start();
 if (isset($_SESSION['valid_user_name'])){
 	if (isset($_POST['question']) && ($_POST['question']!='') && isset($_POST['duskolia'])){
@@ -6,6 +7,7 @@ if (isset($_SESSION['valid_user_name'])){
 		$d = $_POST['duskolia'];
 		/*echo $_POST['question'].' '.$_POST['duskolia'];*/
 		$db = new mysqli('localhost','xro','123','dbproject');
+		mysqli_set_charset($db, "utf8");
 		if (mysqli_connect_errno()){
 			echo 'Could not connect to database';
 			exit;
@@ -13,7 +15,8 @@ if (isset($_SESSION['valid_user_name'])){
 		
 		$query = "insert into erwtisi(text,dyskolia) values ('$q','$d')";
 		$result = $db->query($query);
-		$id = mysqli_insert_id($db);
+		mysql_query("SET NAMES 'utf8'");
+		mysql_query("SET CHARACTER SET 'utf8'");
 		if (!$result) {
 		    printf("Error: %s\n", mysqli_error($db));
 		    exit();
@@ -31,7 +34,7 @@ if (isset($_SESSION['valid_user_name'])){
 				if (isset($_POST[$correct])){
 					$cor = $_POST[$correct];
 					//echo $_POST[$choice].' swsth';
-					$query = "insert into epiloges(choices,correct) values ('$c',1)";
+					$query = "insert into epiloges(qid,choices,correct) values ('$id','$c',1)";
 					$result = $db->query($query);
 					$cid = mysqli_insert_id($db);
 					if (!$result) {
@@ -43,7 +46,7 @@ if (isset($_SESSION['valid_user_name'])){
 
 				}else{
 					//echo $_POST[$choice].' lathos';
-					$query = "insert into epiloges(choices,correct) values ('$c',0)";
+					$query = "insert into epiloges(qid,choices,correct) values ('$id','$c',0)";
 					$result = $db->query($query);
 					$cid = mysqli_insert_id($db);
 					if (!$result) {
@@ -55,7 +58,7 @@ if (isset($_SESSION['valid_user_name'])){
 				}
 
 
-				$query = "insert into exei(qid,cid) values ($id,$cid)";
+/*				$query = "insert into exei(qid,cid) values ($id,$cid)";
 				$result = $db->query($query);
 				$cid = mysqli_insert_id($db);
 				if (!$result) {
@@ -64,7 +67,7 @@ if (isset($_SESSION['valid_user_name'])){
 		    	}else {
 					//echo 'H erwthsh kataxwrithke me epituxia ';
 
-				}
+				}*/
 
 			}
 		}

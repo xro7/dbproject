@@ -3,7 +3,7 @@
 
 
 	<?php
-
+	header('Content-Type: text/html; charset=utf-8');
 	session_start();
 	if(isset($_POST['username']) && isset($_POST['password'])){
 		$username = $_POST['username'];
@@ -13,13 +13,15 @@
 			exit;
 		}
 
-		if(!get_magic_quotes_gpc()){
+/*		if(!get_magic_quotes_gpc()){
 			$username = addslashes($username);
 			$password = addslashes($password);
 
-		}
+		}*/
 
 		$db = new mysqli('localhost','xro','123','dbproject');
+		mysql_query("SET NAMES 'utf8'");
+		mysql_query("SET CHARACTER SET 'utf8'");
 		if (mysqli_connect_errno()){
 			echo 'Could not connect to database';
 			exit;
@@ -54,6 +56,7 @@
 	<head>
 		<title><?php echo $_SESSION['valid_user_username'];  ?></title>
 		<link rel="stylesheet" href="../css/userstyle.css">
+		<meta http-equiv="content-type" content="text/html" charset="UTF-8">
 
 	</head>
 	<body>
@@ -137,7 +140,35 @@
 						$row = $result->fetch_assoc();
 						echo '<h3> Eρώτηση: '.($i+1).' '. $row['text'].', Δυσκολία: '.$row['dyskolia'].'</h3>';
 						$id = $row['id'];
-						$q = 'select  choices from epiloges  where id IN (select cid from exei where qid='.$id.')';
+
+
+						////////////prosthiki onomatos eisigiti kai elegkti////////////
+						$q = 'select name from eisigitis where id in (select  eisigitis from erwtisi  where id='.$id.')';
+						$res = $db->query($q);
+						if (!$res) {
+					    	printf("Error: %s\n", mysqli_error($db));
+					    	exit();
+						}
+						$q = 'select name from elegktis where id in (select  elegktis from erwtisi  where id='.$id.')';
+						$res2 = $db->query($q);
+						if (!$res2) {
+					    	printf("Error: %s\n", mysqli_error($db));
+					    	exit();
+						}
+						$numres = mysqli_num_rows($res);
+						$numres2 = mysqli_num_rows($res2);
+						if($numres<1 || $numres2<1){
+							echo 'something went wrong';
+					    	exit();
+						}else{
+							$row = $res->fetch_assoc();
+							$row2 = $res2->fetch_assoc();
+							echo '<p> Εισηγητής: '. $row['name'].', Eλεγκτής: '. $row2['name'].'</p>';
+						}
+						////////////////////////////////////////////////////////////////////////
+						
+						
+						$q = 'select  choices from epiloges  where qid='.$id;
 						$result2 = $db->query($q);
 						if (!$result2) {
 					    	printf("Error: %s\n", mysqli_error($db));
@@ -153,7 +184,8 @@
 							echo '</ul>';
 						}
 
-						$q = 'select  choices from epiloges  where correct=1 and id IN (select cid from exei where qid='.$id.')';
+						//$q = 'select  choices from epiloges  where correct=1 and id IN (select cid from exei where qid='.$id.')';
+						$q = 'select  choices from epiloges  where correct=1 and qid='.$id;
 						$result3 = $db->query($q);
 						if (!$result3) {
 					    	printf("Error: %s\n", mysqli_error($db));
