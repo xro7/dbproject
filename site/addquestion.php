@@ -1,22 +1,17 @@
 <?php
-header('Content-Type: text/html; charset=utf-8');
+include('dbconnect.php');
 session_start();
 if (isset($_SESSION['valid_user_name'])){
 	if (isset($_POST['question']) && ($_POST['question']!='') && isset($_POST['duskolia'])){
 		$q = $_POST['question'];
 		$d = $_POST['duskolia'];
+		$eisigitisid = $_SESSION['valid_user_id'];
 		/*echo $_POST['question'].' '.$_POST['duskolia'];*/
-		$db = new mysqli('localhost','xro','123','dbproject');
-		mysqli_set_charset($db, "utf8");
-		if (mysqli_connect_errno()){
-			echo 'Could not connect to database';
-			exit;
-		}
+		$db = dbconnect();
 		
-		$query = "insert into erwtisi(text,dyskolia) values ('$q','$d')";
+		$query = "insert into erwtisi(text,dyskolia,eisigitis) values ('$q','$d','$eisigitisid')";
 		$result = $db->query($query);
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query("SET CHARACTER SET 'utf8'");
+		$id = mysqli_insert_id($db);
 		if (!$result) {
 		    printf("Error: %s\n", mysqli_error($db));
 		    exit();
@@ -106,11 +101,7 @@ if (isset($_SESSION['valid_user_name'])){
 }
 
 function addtodb($id,$tid){
-	$db = new mysqli('localhost','xro','123','dbproject');
-	if (mysqli_connect_errno()){
-		echo 'Could not connect to database';
-		exit;
-	}
+	$db = dbconnect();
 	$query = "insert into apeuthinetai(qid,tid) values ($id,$tid)";
 	$result = $db->query($query);
 	$cid = mysqli_insert_id($db);

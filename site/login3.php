@@ -1,7 +1,7 @@
 <?php
 session_start();
 if(isset($_SESSION['valid_user_name3'])){
-	header('Location: http://localhost/dbproject/site/elegktis.php');
+	header('Location: http://localhost/dbproject/site/kathigitis.php');
 }else{
 
 	?>
@@ -23,7 +23,7 @@ if(isset($_SESSION['valid_user_name3'])){
 	<div id="space"></div>
 	<div id="form">
 		
-		<form action="elegktis.php" method="post">
+		<form action="kathigitis.php" method="post">
 		  <label for="username">Username</label>
 		  <input type="text" name="username" placeholder="Username">
 		  <br>

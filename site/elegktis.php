@@ -3,7 +3,7 @@
 
 
 	<?php
-
+	include('dbconnect.php');
 	session_start();
 	header('Content-Type: text/html; charset=utf-8');
 	if(isset($_POST['username']) && isset($_POST['password'])){
@@ -20,13 +20,7 @@
 
 		}*/
 
-		$db = new mysqli('localhost','xro','123','dbproject');
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query("SET CHARACTER SET 'utf8'");
-		if (mysqli_connect_errno()){
-			echo 'Could not connect to database';
-			exit;
-		}
+		$db = dbconnect();
 		$query = "select * from elegktis where username='$username' and password = '$password'";
 		$result = $db->query($query);
 		if (!$result) {
@@ -70,6 +64,7 @@
 
 
 			<?php echo '<h1>Ελεγκτης '.$_SESSION['valid_user_name2'].'</h1>';?>
+			<a href="http://localhost/dbproject"> Αρχική </a>
 			<a href="logout.php"> logout </a>
 			
 

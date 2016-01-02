@@ -1,19 +1,14 @@
 <?php
+include('dbconnect.php');
 session_start();
-header('Content-Type: text/html; charset=utf-8');
 if (isset($_SESSION['valid_user_name2'])){
-	$db = new mysqli('localhost','xro','123','dbproject');
-	mysql_query("SET NAMES 'utf8'");
-	mysql_query("SET CHARACTER SET 'utf8'");
-	if (mysqli_connect_errno()){
-		echo 'Could not connect to database';
-		exit;
-	}
+	$elegktisid = $_SESSION['valid_user_id2'];
+	$db = dbconnect();
 	
 	if(isset($_POST['approve'])){
 		//echo $_POST['approve'];
 		$id = $_POST['approve'];
-		$query = "update erwtisi set approved=1 where id=$id";
+		$query = "update erwtisi set approved=1,elegktis=$elegktisid where id=$id";
 		$result = $db->query($query);
 		if (!$result) {
 		    printf("Error: %s\n", mysqli_error($db));

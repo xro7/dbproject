@@ -4,7 +4,6 @@
 
 	<?php
 	include('dbconnect.php');
-	
 	session_start();
 	if(isset($_POST['username']) && isset($_POST['password'])){
 		$username = $_POST['username'];
@@ -14,16 +13,8 @@
 			exit;
 		}
 
-/* */
-
-		$db = new mysqli('localhost','xro','123','dbproject');
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query("SET CHARACTER SET 'utf8'");
-		if (mysqli_connect_errno()){
-			echo 'Could not connect to database';
-			exit;
-		}
-		$query = "select * from eisigitis where username='$username' and password = '$password'";
+		$db = dbconnect();
+		$query = "select * from kathigitis where username='$username' and password = '$password'";
 		$result = $db->query($query);
 		if (!$result) {
 		    printf("Error: %s\n", mysqli_error($db));
@@ -35,9 +26,23 @@
 		if ($numresults==1){
 			
 			$row = $result->fetch_assoc();
-			$_SESSION['valid_user_name'] = $row['name'];
-			$_SESSION['valid_user_username'] = $row['username'];
-			$_SESSION['valid_user_id'] = $row['id'];
+			$_SESSION['valid_user_name3'] = $row['name'];
+			$_SESSION['valid_user_username3'] = $row['username'];
+			$_SESSION['valid_user_id3'] = $row['id'];
+
+			$cid = $row['classid'];
+			//$query = "select id from taksi where id in ( select taksiid from tmhmata where id=$cid) ";
+			$query = "select name,taksiid from tmimata where id = $cid ";
+			$result = $db->query($query);
+			if (!$result) {
+		  	  printf("Error: %s\n", mysqli_error($db));
+		    exit();
+			}
+
+			$row = $result->fetch_assoc();
+			$_SESSION['classname3'] = $row['name'];
+			$_SESSION['tasksiid3'] = $row['taksiid'];
+
 
 		}else {
 
@@ -46,12 +51,12 @@
 		}
 	}
 
-	if(isset($_SESSION['valid_user_name'])){
+	if(isset($_SESSION['valid_user_name3'])){
 
 	?>
 
 	<head>
-		<title><?php echo $_SESSION['valid_user_username'];  ?></title>
+		<title><?php echo $_SESSION['valid_user_username3'];  ?></title>
 		<link rel="stylesheet" href="../css/userstyle.css">
 		<meta http-equiv="content-type" content="text/html" charset="UTF-8">
 
@@ -65,49 +70,34 @@
 			</div>
 
 			<div id="input">
-				<?php echo '<h1>Εισηγητής '.$_SESSION['valid_user_name'].'</h1>';?>
+				<?php echo '<h1>Καθηγητής '.$_SESSION['valid_user_name3'].' στο τμήμα '.$_SESSION['classname3'].'</h1>';?>
 				<a href="http://localhost/dbproject"> Αρχική </a>
 				<a href="logout.php"> logout </a>
+
 				<hr>
-				<h3>Προσθήκη νέας ερώτησης</h3>
+				
+ 				<h3>Δημιουργία τυχαίου διαγωνίσματος</h3>
 
-				<form action="addquestion.php" method="post">
-					
-				<textarea name="question" id="question" cols="30" rows="10"></textarea>
-				<p>Επιλογές</p>
-				<input type="checkbox" name="correct1" value="correct1" >
-				<input type="text" id="choice1" name="choice1">
-				<input type="checkbox" name="correct2" value="correct2" >
-				<input type="text" id="choice2" name="choice2">
-				<input type="checkbox" name="correct3" value="correct3" >
-				<input type="text" id="choice3" name="choice3">
-				<input type="checkbox" name="correct4" value="correct4" >
-				<input type="text" id="choice4" name="choice4">
-			
-				<br>
-				<p>Απεθύνεται στις τάξεις:</p>
+				<form action="createtest.php" method="post">
 
-				<label><input type="checkbox" name="a" value="a" >a </label>
-				<label><input type="checkbox" name="b" value="b" >b </label>
-				<label><input type="checkbox" name="g" value="g" >g</label>
-				<label><input type="checkbox" name="d" value="d" >d </label>
-				<label><input type="checkbox" name="e" value="e" >e </label>
-				<label><input type="checkbox" name="st" value="st" >st </label>
-				<br>
+					<p>Όνομα διαγωνίσματος</p>
 
-				<p>Δυσκολία</p>
+					<input type="text" name="name">
+	
 
-				<select name="duskolia">
-					  <option value="easy">easy</option>
-					  <option value="medium">medium</option>
-					  <option value="hard">hard</option>
-					
-				</select>
-				<br>
-				<br>
-				<input type="submit" value="Προσθήκη">
-			
-				</form>
+					<p>Επιλογή δυσκολίας</p>
+
+					<select name="duskolia">
+						  <option value="easy">easy</option>
+						  <option value="medium">medium</option>
+						  <option value="hard">hard</option>
+						
+					</select>
+					<br>
+					<br>
+					<input type="submit" name= "random" value="Δημιουργία">
+							
+				</form> 
 
 		
 			
@@ -117,12 +107,22 @@
 			<div id="main">
 
 				
-				<h2>Ερωτήσεις που έχουν εγκριθεί</h2>
+				<h3>Δημιουργία διαγωνίσματος με επιλογή ερωτήσεων</h3>
+
+				<p>Όνομα διαγωνίσματος</p>
+
+				<form action="createtest.php" method="post">
+
+				<input type="text" name="name">
 				<?php
 
-					$db = dbconnect();
+					$db = new mysqli('localhost','xro','123','dbproject');
+					if (mysqli_connect_errno()){
+						echo 'Could not connect to database';
+						exit;
+					}
 
-					$query = "select * from erwtisi where approved=1";
+					$query = 'select * from erwtisi where approved=1 and id in (select qid from apeuthinetai where tid ='.$_SESSION['tasksiid3'].' )';
 					$result = $db->query($query);
 					if (!$result) {
 					    printf("Error: %s\n", mysqli_error($db));
@@ -210,12 +210,18 @@
 							echo '<li> '.$row['name'].'</li>';
 							echo '</ul>';
 						}
+						echo "<label><input type=\"checkbox\" name=\"question$i\" value=\"$id\" >Επιλογή Ερώτησης </label>";
+						//echo "<input type=\"submit\" value=\"Υποβολή\"></form>";
 
 					}
 /*mysqli_insert_id() to get the id */
 /*select * from social.user U where U.id IN (select F.id2 from social.user U,social.friend F where U.id=122 and U.id=F.id1 );*/
 
 				?>
+
+				<input type="submit" name= "manual" value="Δημιουργία">
+							
+				</form> 
 			</div>
 			
 		</div>
