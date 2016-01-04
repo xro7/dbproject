@@ -31,6 +31,7 @@
 			$_SESSION['valid_user_id3'] = $row['id'];
 
 			$cid = $row['classid'];
+			$_SESSION['classid3'] = $row['classid'];
 			//$query = "select id from taksi where id in ( select taksiid from tmhmata where id=$cid) ";
 			$query = "select name,taksiid from tmimata where id = $cid ";
 			$result = $db->query($query);
@@ -58,7 +59,8 @@
 	<head>
 		<title><?php echo $_SESSION['valid_user_username3'];  ?></title>
 		<link rel="stylesheet" href="../css/userstyle.css">
-		<meta http-equiv="content-type" content="text/html" charset="UTF-8">
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	</head>
 	<body>
@@ -73,6 +75,30 @@
 				<?php echo '<h1>Καθηγητής '.$_SESSION['valid_user_name3'].' στο τμήμα '.$_SESSION['classname3'].'</h1>';?>
 				<a href="http://localhost/dbproject"> Αρχική </a>
 				<a href="logout.php"> logout </a>
+
+				<h3>Διαγωνίσματα:</h3>
+
+				<?php  
+				$db = dbconnect();
+
+					$query = 'select name from diagwnisma where kathigitisid='.$_SESSION['valid_user_id3'];
+					$result = $db->query($query);
+					if (!$result) {
+					    printf("Error: %s\n", mysqli_error($db));
+					    exit();
+					}
+
+					$numresult = mysqli_num_rows($result);
+					
+					for($j=0;$j< $numresult;$j++){
+						$row = $result->fetch_assoc();
+						
+						echo '<ul>';
+						echo '<li>'.($j+1). ' '.$row['name'].'</li>';
+						echo '</ul>';
+					}
+
+				?>
 
 				<hr>
 				
@@ -106,6 +132,11 @@
 			<hr>
 			<div id="main">
 
+
+
+
+				<hr>
+
 				
 				<h3>Δημιουργία διαγωνίσματος με επιλογή ερωτήσεων</h3>
 
@@ -116,11 +147,7 @@
 				<input type="text" name="name">
 				<?php
 
-					$db = new mysqli('localhost','xro','123','dbproject');
-					if (mysqli_connect_errno()){
-						echo 'Could not connect to database';
-						exit;
-					}
+					$db = dbconnect();
 
 					$query = 'select * from erwtisi where approved=1 and id in (select qid from apeuthinetai where tid ='.$_SESSION['tasksiid3'].' )';
 					$result = $db->query($query);

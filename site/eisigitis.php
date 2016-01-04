@@ -4,7 +4,7 @@
 
 	<?php
 	include('dbconnect.php');
-	
+	header('Content-type: text/html; charset=utf-8');
 	session_start();
 	if(isset($_POST['username']) && isset($_POST['password'])){
 		$username = $_POST['username'];
@@ -16,13 +16,7 @@
 
 /* */
 
-		$db = new mysqli('localhost','xro','123','dbproject');
-		mysql_query("SET NAMES 'utf8'");
-		mysql_query("SET CHARACTER SET 'utf8'");
-		if (mysqli_connect_errno()){
-			echo 'Could not connect to database';
-			exit;
-		}
+		$db = dbconnect();
 		$query = "select * from eisigitis where username='$username' and password = '$password'";
 		$result = $db->query($query);
 		if (!$result) {
@@ -53,7 +47,8 @@
 	<head>
 		<title><?php echo $_SESSION['valid_user_username'];  ?></title>
 		<link rel="stylesheet" href="../css/userstyle.css">
-		<meta http-equiv="content-type" content="text/html" charset="UTF-8">
+		
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
 	</head>
 	<body>
@@ -121,6 +116,7 @@
 				<?php
 
 					$db = dbconnect();
+
 
 					$query = "select * from erwtisi where approved=1";
 					$result = $db->query($query);

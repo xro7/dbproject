@@ -1,5 +1,6 @@
 <?php
 include('dbconnect.php');
+header('Content-type: text/html; charset=utf-8');
 session_start();
 if (isset($_SESSION['valid_user_name'])){
 	if (isset($_POST['question']) && ($_POST['question']!='') && isset($_POST['duskolia'])){

@@ -25,7 +25,7 @@ if (isset($_SESSION['valid_user_name3'])){
 			$res = $db->query($query);
 			$testid = mysqli_insert_id($db);
 			if (!$res) {
-			    printf("Error: %s\n", mysqli_error($db));
+			    printf("Error in diagwnisma: %s\n", mysqli_error($db));
 			    exit();
 			}				
 		
@@ -36,12 +36,33 @@ if (isset($_SESSION['valid_user_name3'])){
 				$res = $db->query($query);
 				//$testid = mysqli_insert_id($db);
 				if (!$res) {
-		   			printf("Error: %s\n", mysqli_error($db));
+		   			printf("Error in periexei: %s\n", mysqli_error($db));
 		    		exit();
 				}	
 		
 
 			}
+
+
+			$q = 'select id from mathitis where classid='.$_SESSION['classid3'];
+			$r= $db->query($q);
+			if (!$r) {
+			    printf("Error: %s\n", mysqli_error($db));
+			    exit();
+			}
+			$n = mysqli_num_rows($r);
+
+			for($i=0;$i< $n;$i++){		
+				$row = $r->fetch_assoc();
+				$studentid = $row['id'];
+				$q2 = "insert into grafei(testid,studentid) values ('$testid','$studentid')";
+				$r2 = $db->query($q2);
+				if (!$r2) {
+		  	  		printf("Error in grafei: %s\n", mysqli_error($db));
+		   	  	    exit();
+				}	
+				
+			}			
 			echo "To διαγώνισμα δημιουργήθηκε με επιτυχία ";
 			echo "<a href=\"kathigitis.php\">goback</a>";
 
@@ -61,7 +82,7 @@ if (isset($_SESSION['valid_user_name3'])){
 		$res = $db->query($query);
 		$testid = mysqli_insert_id($db);
 		if (!$res) {
-		    printf("Error: %s\n", mysqli_error($db));
+		    printf("Error in diagwnisma: %s\n", mysqli_error($db));
 		    exit();
 		}	
 
@@ -74,11 +95,35 @@ if (isset($_SESSION['valid_user_name3'])){
 				//echo $testid.' '. $qid;
 				$res2 = $db->query($query);
 				if (!$res2) {
-		  	  		printf("Error: %s\n", mysqli_error($db));
+		  	  		printf("Error in periexei: %s\n", mysqli_error($db));
 		   	  	    exit();
 				}	
 			}
 		}
+
+		$q = 'select id from mathitis where classid='.$_SESSION['classid3'];
+		$r= $db->query($q);
+		if (!$r) {
+		    printf("Error: %s\n", mysqli_error($db));
+		    exit();
+		}
+		$n = mysqli_num_rows($r);
+
+		for($i=0;$i< $n;$i++){		
+			$row = $r->fetch_assoc();
+			$studentid = $row['id'];
+			$q2 = "insert into grafei(testid,studentid) values ('$testid','$studentid')";
+			//echo $testid.' '. $qid;
+			$r2 = $db->query($q2);
+			if (!$r2) {
+	  	  		printf("Errorin grafei: %s\n", mysqli_error($db));
+	   	  	    exit();
+			}	
+			
+		}
+
+
+
 
 		echo "To διαγώνισμα δημιουργήθηκε με επιτυχία ";
 		echo "<a href=\"kathigitis.php\">goback</a>";
